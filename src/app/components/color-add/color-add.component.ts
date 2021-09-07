@@ -1,9 +1,7 @@
+import { ColorService } from 'src/app/services/color/color.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl , FormBuilder , Validators , FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { Color } from 'src/app/models/color';
-import { ColorService } from 'src/app/services/color.service';
 
 @Component({
   selector: 'app-color-add',
@@ -12,60 +10,37 @@ import { ColorService } from 'src/app/services/color.service';
 })
 export class ColorAddComponent implements OnInit {
 
-  colors:Color[]=[];
-  colorAddForm : FormGroup;
+  colorAddForm : FormGroup
 
-
-  constructor(private colorService:ColorService,
-    private toastrService:ToastrService,
-    private formBuilder:FormBuilder,private activatedRoute:ActivatedRoute,
-    private router:Router) { }
+  constructor(private formBuilder:FormBuilder,
+     private colorService:ColorService, 
+     private toastrService:ToastrService) { }
 
   ngOnInit(): void {
-
-    this.createColorAddForm();
+    this.createColorAddForm()
   }
-
 
   createColorAddForm(){
     this.colorAddForm = this.formBuilder.group({
-      colorId:[Validators.required],
       colorName:["",Validators.required]
     })
   }
 
   add(){
-    if(this.colorAddForm.valid){
+    if (this.colorAddForm.valid) {
       let colorModel = Object.assign({},this.colorAddForm.value)
-      this.colorService.add(colorModel).subscribe(response=>{
-        this.toastrService.success("Renk eklendi","Başarılı")
-        this.back();
-        console.log("geri döndü")
-      },responseError=>{
-        if(responseError.error.Errors.length>0){
-          for (let i = 0; i <responseError.error.Errors.length; i++) {
-                   this.toastrService.error(responseError.error.Errors[i].ErrorMessage,"Doğrulama hatası")
-                   console.log(responseError.error.Errors[i].ErrorMessage);
-
+      this.colorService.add(colorModel).subscribe((response) => { 
+        this.toastrService.success("Renk eklendi" , "İşlem Başarılı")
+      },(responseError) => {
+        if (responseError.error.Errors.length>0) {
+          for (let i = 0; i < responseError.error.Errors.length; i++) {
+            this.toastrService.error(responseError.error.Errors[i].ErrorMessage , "İşlem başarısız")
+          }
         }
-      }
-
-    })
-
+      })
     }else{
-      this.toastrService.error("Formunuz eksik","Dikkat")
+      this.toastrService.error("Form bilgileri eksik" , "İşlem başarısız")
     }
-
-  }
-
-
-
-
-
-  back(){
-
-    this.router.navigate(["colors/list"])
-    window.location.reload();
   }
 
 }

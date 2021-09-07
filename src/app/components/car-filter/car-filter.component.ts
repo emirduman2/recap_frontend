@@ -1,8 +1,8 @@
+import { Color } from './../../models/color';
+import { Brand } from './../../models/brand';
+import { ColorService } from './../../services/color/color.service';
 import { Component, OnInit } from '@angular/core';
-import { Brand } from 'src/app/models/brand';
-import { Color } from 'src/app/models/color';
-import { BrandService } from 'src/app/services/brand.service';
-import { ColorService } from 'src/app/services/color.service';
+import { BrandService } from 'src/app/services/brand/brand.service';
 
 @Component({
   selector: 'app-car-filter',
@@ -10,61 +10,59 @@ import { ColorService } from 'src/app/services/color.service';
   styleUrls: ['./car-filter.component.css']
 })
 export class CarFilterComponent implements OnInit {
-  brands: Brand[];
-  colors: Color[];
 
-  filterText="";
-  selectedBrand:string=null;
-  selectedColor:string=null;
-  constructor(  private brandService: BrandService,
-    private colorService: ColorService,) { }
+  brands:Brand[] = []
+  colors:Color[] = []
+  isDataLoaded = false
+  selectedBrandId:number
+  selectedColorId:number
+  routeLink = ""
+
+
+  constructor(private brandService:BrandService , private colorService:ColorService) { }
 
   ngOnInit(): void {
-    this.getBrands();
-        this.getColors();
+    this.getBrands()
+    this.getColors()
   }
-  checkFilterClass()
-  {
-    if(this.selectedBrand||this.selectedColor)
-    {
-      return "btn btn-primary me-3"
-    }
-    else
-    {
-      return "btn btn-primary disabled me-3"
-    }
-  }
-  routingLink()
-  {
-    if(this.selectedBrand!=null&&this.selectedColor!=null)
-    {
-      return "/cars/brand/"+this.selectedBrand+"/color/"+this.selectedColor
 
-    }
-    else if(this.selectedBrand!=null&&this.selectedColor==null)
-    {
-
-      return "/cars/brand/"+this.selectedBrand
-    }
-     else if(this.selectedColor!=null&&this.selectedBrand==null)
-    {
-      return "/cars/color/"+this.selectedColor
-
-    }
-    else{
-
-    return "/cars"
-    }
-  }
-  getColors(){
-    this.colorService.getColors().subscribe(response=>{
-      this.colors = response.data
-    })
-  }
   getBrands(){
-    this.brandService.getBrands().subscribe(response=>{
+    this.brandService.getBrands().subscribe((response) => {
       this.brands = response.data
+      this.isDataLoaded = true
     })
   }
+
+  getColors(){
+    this.colorService.getColors().subscribe((response) => {
+      this.colors = response.data
+      this.isDataLoaded = true
+    })
+  }
+
+  changeButtonClass(){
+    if (this.selectedBrandId ||this.selectedColorId) {
+      return "btn btn-success"
+    }else{
+      return "btn btn-success disabled"
+    }
+  }
+
+  changeRouteLink(){
+    if (this.selectedBrandId!==null && this.selectedColorId!==null) {
+      this.routeLink = "/cars/brand/" + this.selectedBrandId + "/color/" + this.selectedColorId
+      return this.routeLink
+    }else if(this.selectedBrandId==null && this.selectedColorId!==null){
+      this.routeLink = "/cars/color/" + this.selectedColorId
+      return this.routeLink
+    }else if(this.selectedBrandId!==null && this.selectedColorId == null){
+      this.routeLink = "/cars/brand/" + this.selectedBrandId
+      return this.routeLink
+    }else{
+      this.routeLink = "/"
+      return this.routeLink
+    }
+  }
+
 
 }

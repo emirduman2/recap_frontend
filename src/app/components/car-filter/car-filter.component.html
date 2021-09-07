@@ -1,30 +1,21 @@
-<div class="row">
 
-    
-
-    <div class="col-md-4">
-        <div class="mb-3">         
-            <select [(ngModel)]="selectedBrand"  class="form-select" aria-label="Default select example">
-                <option selected disabled value=null>Marka Seçiniz</option>
-                <option *ngFor="let brand of brands" [value]="brand.brandId">{{brand.brandName}}</option>
-            </select>
-           
-        </div>
-
-    </div>
-    
-    <div class="col-md-4">
-        <div class="mb-3">           
-            <select [(ngModel)]="selectedColor"  class="form-select" aria-label="Default select example">
-                <option selected disabled value=null>Renk Seçiniz</option>
-                <option *ngFor="let color of colors" [value]="color.colorId">{{color.colorName}}</option>
-            </select>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="mb-3">
-            <button type="button" [class]="checkFilterClass()" [routerLink]=(routingLink())>Filtrele</button>
-                 <button class="btn btn-warning me-3" routerLink="">Clear</button>
-        </div>
-    </div> </div>
-    
+<div class="container" style="margin-top: 1cm;" *ngIf="isDataLoaded==true">
+    <div class="row">
+        <div class="col">
+            <label for="brandFilter" class="form-label">Markalar</label>
+<select class="form-select" id="brandFilter" aria-label="Default select example" [(ngModel)]="selectedBrandId">
+    <option *ngFor="let brand of brands" value="{{brand.id}}" >{{brand.brandName}}</option>
+  </select>
+</div>
+<div class="col">
+    <label for="colorFilter" class="form-label">Renkler</label>
+  <select class="form-select" id="colorFilter" aria-label="Default select example" [(ngModel)]="selectedColorId">
+    <option *ngFor="let color of colors" value="{{color.id}}">{{color.colorName}}</option>
+  </select>
+</div>
+<div class="col">
+    <button type="submit" [class]="changeButtonClass()" [routerLink]="changeRouteLink()">Filtrele</button>
+    <button type="submit" class="btn btn-success" style="margin-left: 0.5cm;" routerLink="/">Temizle</button>
+</div>
+</div>
+</div>

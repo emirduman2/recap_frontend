@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Brand } from 'src/app/models/brand';
-import { BrandService } from 'src/app/services/brand.service';
+import { BrandService } from 'src/app/services/brand/brand.service';
 
 @Component({
   selector: 'app-brand',
@@ -9,31 +9,21 @@ import { BrandService } from 'src/app/services/brand.service';
 })
 export class BrandComponent implements OnInit {
 
-  dataLoaded=false;
-  brands:Brand[]=[];
-  currentBrand:Brand={brandId:0,brandName:""};
-  
+  isDataLoaded = false
+  filterText = "";
+  brands:Brand[] = []
+
   constructor(private brandService:BrandService) { }
 
   ngOnInit(): void {
-    this.getBrands();
+    this.getBrands()
   }
+
   getBrands(){
-    this.brandService.getBrands().subscribe(response=>{
+    this.brandService.getBrands().subscribe((response) => {
       this.brands = response.data
-      this.dataLoaded=true;
-    })    
-  } 
-
-  setCurrentBrand(brand:Brand){
-    this.currentBrand=brand;
-  }
-  getCurrentClass(brand:Brand){
-    if (brand== this.currentBrand) {
-      return "list-group-item active"
-    } else {
-      return "list-group-item"
-    }
+      this.isDataLoaded = true
+    })
   }
 
-} 
+}

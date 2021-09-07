@@ -1,6 +1,6 @@
+import { Color } from './../../models/color';
 import { Component, OnInit } from '@angular/core';
-import { Color } from 'src/app/models/color';
-import { ColorService } from 'src/app/services/color.service';
+import { ColorService } from 'src/app/services/color/color.service';
 
 @Component({
   selector: 'app-color',
@@ -8,31 +8,21 @@ import { ColorService } from 'src/app/services/color.service';
   styleUrls: ['./color.component.css']
 })
 export class ColorComponent implements OnInit {
-  dataLoaded=false;
-  colors:Color[]=[];
-  currentColor:Color | undefined;
+
+  filterText = ""
+  isDataLoaded = false
+  colors:Color[] = []
+
   constructor(private colorService:ColorService) { }
 
   ngOnInit(): void {
-    this.getColors();
+    this.getColors()
   }
 
   getColors(){
-    this.colorService.getColors().subscribe(response=>{
+    this.colorService.getColors().subscribe((response) => {
       this.colors = response.data
-      this.dataLoaded=true;
-    })    
+      this.isDataLoaded = true
+    })
   }
-
-  setCurrentColor(color:Color){
-    this.currentColor=color;
-  }
-  getCurrentClass(color:Color){
-    if (color== this.currentColor) {
-      return "list-group-item active"
-    } else {
-      return "list-group-item"
-    }
-  }
-
 }
